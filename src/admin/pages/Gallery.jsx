@@ -1,80 +1,65 @@
-import { useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import imageCompression from "browser-image-compression";
 
-import {
-  FaCloudUploadAlt,
-  FaTrash,
-  FaGem,
-  FaImage,
-  FaTags,
-  FaMoneyBillWave,
-} from "react-icons/fa";
+import { FaCloudUploadAlt, FaTrash, FaGem, FaImage } from "react-icons/fa";
 
 import styles from "../styles/adminGallery.module.css";
 
-const categories = ["Bridal", "Chiffon", "Modern", "Textile", "Traditional"];
+const categories = ["Women", "Men", "Couples", "Family"];
 
 const AdminGallery = () => {
   const [images, setImages] = useState([]);
-
   const [title, setTitle] = useState("");
-
   const [price, setPrice] = useState("");
-
-  const [category, setCategory] = useState("Bridal");
-
+  const [category, setCategory] = useState("Women");
   const [description, setDescription] = useState("");
-
   const [file, setFile] = useState(null);
-
   const [preview, setPreview] = useState(null);
-
   const [loading, setLoading] = useState(false);
-
   const [fetching, setFetching] = useState(true);
 
-  useEffect(() => {
-    fetchImages();
-
-    return () => {
-      if (preview) {
-        URL.revokeObjectURL(preview);
-      }
-    };
-  }, []);
-
-  const fetchImages = async () => {
+  const fetchImages = useCallback(async () => {
     try {
-      const res = await axios.get(
+      const response = await axios.get(
         `${import.meta.env.VITE_API_URL}/api/gallery`,
       );
 
-      setImages(res.data);
-    } catch (err) {
-      console.log(err);
+      setImages(Array.isArray(response.data) ? response.data : []);
+    } catch (error) {
+      console.error("Unable to load gallery images:", error);
     } finally {
       setFetching(false);
     }
+  }, []);
+
+  useEffect(() => {
+    fetchImages();
+  }, [fetchImages]);
+
+  useEffect(() => {
+    if (!preview) return undefined;
+
+    return () => {
+      URL.revokeObjectURL(preview);
+    };
+  }, [preview]);
+
+  const handleFileChange = (event) => {
+    const selectedFile = event.target.files?.[0];
+
+    if (!selectedFile) return;
+
+    setFile(selectedFile);
+    setPreview(URL.createObjectURL(selectedFile));
   };
 
-  const handleFileChange = (e) => {
-    const selected = e.target.files[0];
+  const handleUpload = async (event) => {
+    event.preventDefault();
 
-    if (!selected) return;
-
-    setFile(selected);
-
-    setPreview(URL.createObjectURL(selected));
-  };
-
-  const handleUpload = async (e) => {
-    e.preventDefault();
-
-    if (!file || !title) {
-      alert("Please add title and image");
-
+    if (!file || !title.trim()) {
+      window.alert("Please enter a design name and choose an image.");
       return;
     }
 
@@ -84,36 +69,27 @@ const AdminGallery = () => {
       let uploadFile = file;
 
       if (file.size > 2 * 1024 * 1024) {
-        const compressed = await imageCompression(file, {
+        const compressedFile = await imageCompression(file, {
           maxSizeMB: 1,
-
           maxWidthOrHeight: 1400,
-
           useWebWorker: true,
         });
 
-        uploadFile = new File([compressed], file.name, {
-          type: compressed.type,
+        uploadFile = new File([compressedFile], file.name, {
+          type: compressedFile.type,
         });
       }
 
       const formData = new FormData();
-
       formData.append("image", uploadFile);
-
-      formData.append("title", title);
-
+      formData.append("title", title.trim());
       formData.append("category", category);
+      formData.append("price", price.trim());
+      formData.append("description", description.trim());
 
-      formData.append("price", price);
-
-      formData.append("description", description);
-
-      const res = await axios.post(
+      const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/gallery`,
-
         formData,
-
         {
           headers: {
             "Content-Type": "multipart/form-data",
@@ -121,53 +97,54 @@ const AdminGallery = () => {
         },
       );
 
-      setImages([res.data.gallery, ...images]);
+      if (response.data?.gallery) {
+        setImages((currentImages) => [response.data.gallery, ...currentImages]);
+      } else {
+        await fetchImages();
+      }
 
       setTitle("");
-
       setPrice("");
-
       setDescription("");
-
       setFile(null);
-
       setPreview(null);
-    } catch (error) {
-      console.log(error);
 
-      alert("Upload failed");
+      const fileInput = event.currentTarget.querySelector('input[type="file"]');
+      if (fileInput) fileInput.value = "";
+    } catch (error) {
+      console.error("Gallery upload failed:", error);
+      window.alert(
+        error.response?.data?.message || "Upload failed. Please try again.",
+      );
     } finally {
       setLoading(false);
     }
   };
 
   const deleteImage = async (id) => {
-    const confirmDelete = window.confirm("Delete this Fiyorina design?");
+    const confirmed = window.confirm("Delete this Yigermal Design image?");
 
-    if (!confirmDelete) return;
+    if (!confirmed) return;
 
     try {
       await axios.delete(`${import.meta.env.VITE_API_URL}/api/gallery/${id}`);
 
-      setImages(images.filter((item) => item._id !== id));
+      setImages((currentImages) =>
+        currentImages.filter((item) => item._id !== id),
+      );
     } catch (error) {
-      console.log(error);
+      console.error("Gallery image deletion failed:", error);
+      window.alert(
+        error.response?.data?.message || "Delete failed. Please try again.",
+      );
     }
   };
 
   return (
     <div className={styles.container}>
-      {/* HEADER */}
-
       <motion.div
-        initial={{
-          opacity: 0,
-          y: -30,
-        }}
-        animate={{
-          opacity: 1,
-          y: 0,
-        }}
+        initial={{ opacity: 0, y: -30 }}
+        animate={{ opacity: 1, y: 0 }}
         className={styles.header}
       >
         <div className={styles.logo}>
@@ -175,13 +152,10 @@ const AdminGallery = () => {
         </div>
 
         <div>
-          <h1>Yigermal design Gallery Studio</h1>
-
-          <p>Manage luxury fashion collections</p>
+          <h1>Yigermal Design Gallery Studio</h1>
+          <p>Manage Women, Men, Couples, and Family collections</p>
         </div>
       </motion.div>
-
-      {/* UPLOAD */}
 
       <motion.form onSubmit={handleUpload} className={styles.uploadCard}>
         <h2>
@@ -192,26 +166,29 @@ const AdminGallery = () => {
         <div className={styles.formGrid}>
           <input
             className={styles.input}
-            placeholder="Dress name"
+            placeholder="Design name"
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={(event) => setTitle(event.target.value)}
+            required
           />
 
           <select
             className={styles.input}
             value={category}
-            onChange={(e) => setCategory(e.target.value)}
+            onChange={(event) => setCategory(event.target.value)}
           >
-            {categories.map((cat) => (
-              <option key={cat}>{cat}</option>
+            {categories.map((collection) => (
+              <option key={collection} value={collection}>
+                {collection}
+              </option>
             ))}
           </select>
 
           <input
             className={styles.input}
-            placeholder="Price e.g 45000 Birr"
+            placeholder="Price, e.g. 45000 Birr"
             value={price}
-            onChange={(e) => setPrice(e.target.value)}
+            onChange={(event) => setPrice(event.target.value)}
           />
         </div>
 
@@ -219,34 +196,41 @@ const AdminGallery = () => {
           className={styles.textarea}
           placeholder="Design description"
           value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          onChange={(event) => setDescription(event.target.value)}
         />
 
         <label className={styles.uploadBox}>
           <FaImage />
-
-          <span>{file ? file.name : "Choose fashion image"}</span>
-
-          <input type="file" accept="image/*" onChange={handleFileChange} />
+          <span>{file ? file.name : "Choose gallery image"}</span>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            required
+          />
         </label>
 
         {preview && (
           <div className={styles.previewBox}>
-            <img src={preview} alt="preview" />
+            <img src={preview} alt="Selected design preview" />
           </div>
         )}
 
-        <button disabled={loading} className={styles.uploadButton}>
+        <button
+          type="submit"
+          disabled={loading}
+          className={styles.uploadButton}
+        >
           {loading ? "Uploading..." : "Publish Design"}
         </button>
       </motion.form>
 
-      {/* GALLERY */}
-
-      <h2 className={styles.sectionTitle}>Collection Designs</h2>
+      <h2 className={styles.sectionTitle}>Gallery Designs</h2>
 
       {fetching ? (
-        <p>Loading collections...</p>
+        <p>Loading gallery...</p>
+      ) : images.length === 0 ? (
+        <p>No designs have been uploaded yet.</p>
       ) : (
         <div className={styles.grid}>
           <AnimatePresence>
@@ -254,20 +238,17 @@ const AdminGallery = () => {
               <motion.div
                 key={item._id}
                 className={styles.card}
-                whileHover={{
-                  y: -8,
-                }}
+                whileHover={{ y: -6 }}
+                layout
               >
-                <img src={item.imageUrl} alt={item.title} />
+                <img src={item.imageUrl} alt={item.title} loading="lazy" />
 
                 <div className={styles.cardInfo}>
                   <h3>{item.title}</h3>
-
                   <span>{item.category}</span>
+                  <p>{item.price || "Contact for price"}</p>
 
-                  <p>{item.price}</p>
-
-                  <button onClick={() => deleteImage(item._id)}>
+                  <button type="button" onClick={() => deleteImage(item._id)}>
                     <FaTrash />
                     Delete
                   </button>
