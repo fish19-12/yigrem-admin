@@ -1,11 +1,13 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import imageCompression from "browser-image-compression";
-
 import { FaCloudUploadAlt, FaTrash, FaGem, FaImage } from "react-icons/fa";
 
 import styles from "../styles/adminGallery.module.css";
+
+// Remove accidental spaces from the .env URL.
+const API_URL = (import.meta.env.VITE_API_URL || "").trim().replace(/\/+$/, "");
 
 const categories = ["Women", "Men", "Couples", "Family"];
 
@@ -20,15 +22,24 @@ const AdminGallery = () => {
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
 
+  const fileInputRef = useRef(null);
+
   const fetchImages = useCallback(async () => {
+    if (!API_URL) {
+      console.error("VITE_API_URL is missing.");
+      setFetching(false);
+      return;
+    }
+
     try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/gallery`,
-      );
+      const response = await axios.get(`${API_URL}/api/gallery`);
 
       setImages(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
-      console.error("Unable to load gallery images:", error);
+      console.error(
+        "Unable to load gallery images:",
+        error.response?.data || error.message,
+      );
     } finally {
       setFetching(false);
     }
@@ -38,11 +49,12 @@ const AdminGallery = () => {
     fetchImages();
   }, [fetchImages]);
 
+  // Release the old preview URL whenever the selected image changes.
   useEffect(() => {
-    if (!preview) return undefined;
-
     return () => {
-      URL.revokeObjectURL(preview);
+      if (preview) {
+        URL.revokeObjectURL(preview);
+      }
     };
   }, [preview]);
 
@@ -51,15 +63,51 @@ const AdminGallery = () => {
 
     if (!selectedFile) return;
 
+    if (!selectedFile.type.startsWith("image/")) {
+      window.alert("Please select a valid image file.");
+      event.target.value = "";
+      return;
+    }
+
+    // Release the previous preview before replacing it.
+    setPreview((oldPreview) => {
+      if (oldPreview) URL.revokeObjectURL(oldPreview);
+      return URL.createObjectURL(selectedFile);
+    });
+
     setFile(selectedFile);
-    setPreview(URL.createObjectURL(selectedFile));
+  };
+
+  const resetForm = () => {
+    setTitle("");
+    setPrice("");
+    setCategory("Women");
+    setDescription("");
+    setFile(null);
+    setPreview(null);
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
   };
 
   const handleUpload = async (event) => {
     event.preventDefault();
 
+    if (!API_URL) {
+      window.alert(
+        "The API URL is missing. Check VITE_API_URL in your frontend environment variables.",
+      );
+      return;
+    }
+
     if (!file || !title.trim()) {
       window.alert("Please enter a design name and choose an image.");
+      return;
+    }
+
+    if (!categories.includes(category)) {
+      window.alert("Please select a valid gallery category.");
       return;
     }
 
@@ -68,34 +116,33 @@ const AdminGallery = () => {
 
       let uploadFile = file;
 
+      // Compress large images before uploading.
       if (file.size > 2 * 1024 * 1024) {
-        const compressedFile = await imageCompression(file, {
+        uploadFile = await imageCompression(file, {
           maxSizeMB: 1,
           maxWidthOrHeight: 1400,
           useWebWorker: true,
         });
 
-        uploadFile = new File([compressedFile], file.name, {
-          type: compressedFile.type,
+        // Preserve the original filename for multipart upload.
+        uploadFile = new File([uploadFile], file.name, {
+          type: uploadFile.type,
         });
       }
 
       const formData = new FormData();
+
+      // These names must match your existing backend.
       formData.append("image", uploadFile);
       formData.append("title", title.trim());
       formData.append("category", category);
       formData.append("price", price.trim());
       formData.append("description", description.trim());
 
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/gallery`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        },
-      );
+      // Let Axios/browser set the multipart Content-Type and boundary.
+      const response = await axios.post(`${API_URL}/api/gallery`, formData, {
+        timeout: 120000,
+      });
 
       if (response.data?.gallery) {
         setImages((currentImages) => [response.data.gallery, ...currentImages]);
@@ -103,37 +150,66 @@ const AdminGallery = () => {
         await fetchImages();
       }
 
-      setTitle("");
-      setPrice("");
-      setDescription("");
-      setFile(null);
-      setPreview(null);
+      resetForm();
 
-      const fileInput = event.currentTarget.querySelector('input[type="file"]');
-      if (fileInput) fileInput.value = "";
+      window.alert("Design uploaded successfully!");
     } catch (error) {
-      console.error("Gallery upload failed:", error);
-      window.alert(
-        error.response?.data?.message || "Upload failed. Please try again.",
-      );
+      const status = error.response?.status;
+      const serverMessage = error.response?.data?.message;
+
+      console.error("Gallery upload failed:", {
+        status,
+        response: error.response?.data,
+        message: error.message,
+      });
+
+      if (!error.response) {
+        window.alert(
+          "Cannot reach the server. Check your internet connection and confirm that your Render backend is running.",
+        );
+      } else if (status === 413) {
+        window.alert(
+          "The image is too large for the server. Please select a smaller image.",
+        );
+      } else if (status === 400) {
+        window.alert(
+          serverMessage ||
+            "Invalid upload. Please check your image and form details.",
+        );
+      } else if (status === 500) {
+        window.alert(
+          `The server failed to save the image.${serverMessage ? ` Details: ${serverMessage}` : ""} Check your Render backend logs.`,
+        );
+      } else {
+        window.alert(
+          serverMessage ||
+            `Upload failed (${status || "unknown error"}). Please try again.`,
+        );
+      }
     } finally {
       setLoading(false);
     }
   };
 
   const deleteImage = async (id) => {
-    const confirmed = window.confirm("Delete this Yigermal Design image?");
-
-    if (!confirmed) return;
+    if (!window.confirm("Delete this Yigermal Design image?")) {
+      return;
+    }
 
     try {
-      await axios.delete(`${import.meta.env.VITE_API_URL}/api/gallery/${id}`);
+      await axios.delete(`${API_URL}/api/gallery/${id}`);
 
       setImages((currentImages) =>
         currentImages.filter((item) => item._id !== id),
       );
+
+      window.alert("Gallery image deleted successfully.");
     } catch (error) {
-      console.error("Gallery image deletion failed:", error);
+      console.error(
+        "Gallery image deletion failed:",
+        error.response?.data || error.message,
+      );
+
       window.alert(
         error.response?.data?.message || "Delete failed. Please try again.",
       );
@@ -202,7 +278,9 @@ const AdminGallery = () => {
         <label className={styles.uploadBox}>
           <FaImage />
           <span>{file ? file.name : "Choose gallery image"}</span>
+
           <input
+            ref={fileInputRef}
             type="file"
             accept="image/*"
             onChange={handleFileChange}
