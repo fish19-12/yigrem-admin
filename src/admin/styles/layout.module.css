@@ -1,0 +1,32 @@
+.container {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background: #050505;
+}
+
+/* Main area (header + content) */
+.main {
+  flex: 1;
+  margin-left: 260px;
+  height: 100vh;
+  width: 100%;
+}
+
+/* Scroll only content */
+.content {
+  height: 100vh;
+  overflow-y: auto;
+  padding: 30px;
+  padding-top: 100px; /* space for fixed header */
+  color: white;
+  background: #050505;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .main {
+    margin-left: 0;
+  }
+}

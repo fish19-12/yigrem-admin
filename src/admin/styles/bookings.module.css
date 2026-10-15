@@ -1,0 +1,815 @@
+/* =========================================
+   FIYORINA LUXURY ORDER DASHBOARD
+========================================= */
+
+.container {
+  max-width: 1500px;
+  margin: auto;
+  padding: 2rem;
+  min-height: 100vh;
+  color: #ffffff;
+  font-family: "Inter", sans-serif;
+}
+
+/* =========================
+ HEADER
+========================= */
+
+.topHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.title {
+  font-size: 2.4rem;
+  font-weight: 900;
+  background: linear-gradient(90deg, #f9a8d4, #facc15);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.subtitle {
+  color: #a1a1aa;
+  margin-top: 0.5rem;
+}
+
+/* ACTIONS */
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.onlineBadge,
+.offlineBadge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  padding: 0.7rem 1rem;
+
+  border-radius: 999px;
+
+  font-weight: 700;
+
+  font-size: 0.85rem;
+}
+
+.onlineBadge {
+  background: rgba(34, 197, 94, 0.15);
+
+  color: #4ade80;
+
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.offlineBadge {
+  background: rgba(239, 68, 68, 0.15);
+
+  color: #f87171;
+}
+
+/* notification */
+
+.notificationCount {
+  position: absolute;
+
+  top: -12px;
+
+  right: -12px;
+
+  width: 24px;
+
+  height: 24px;
+
+  border-radius: 50%;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  background: #ec4899;
+
+  color: white;
+
+  font-size: 0.75rem;
+
+  font-weight: 900;
+}
+
+.refreshBtn {
+  width: 52px;
+
+  height: 52px;
+
+  border-radius: 18px;
+
+  border: none;
+
+  cursor: pointer;
+
+  background: rgba(255, 255, 255, 0.08);
+
+  color: white;
+
+  transition: 0.3s;
+}
+
+.refreshBtn:hover {
+  transform: rotate(180deg);
+
+  background: #ec4899;
+}
+
+/* total */
+
+.totalCard {
+  padding: 1rem 1.5rem;
+
+  border-radius: 22px;
+
+  background: linear-gradient(
+    135deg,
+    rgba(236, 72, 153, 0.2),
+    rgba(250, 204, 21, 0.15)
+  );
+
+  border: 1px solid rgba(255, 255, 255, 0.1);
+
+  text-align: center;
+}
+
+.totalCard span {
+  font-size: 0.8rem;
+
+  color: #d4d4d8;
+}
+
+.totalCard h2 {
+  margin-top: 0.3rem;
+
+  font-size: 2rem;
+
+  color: #facc15;
+}
+
+/* =========================
+ GRID
+========================= */
+
+.grid {
+  display: grid;
+
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+
+  gap: 1.5rem;
+}
+
+/* =========================
+ ORDER CARD
+========================= */
+
+.card {
+  position: relative;
+
+  overflow: hidden;
+
+  padding: 1.5rem;
+
+  border-radius: 32px;
+
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.08),
+    rgba(255, 255, 255, 0.03)
+  );
+
+  border: 1px solid rgba(255, 255, 255, 0.12);
+
+  backdrop-filter: blur(20px);
+
+  transition: 0.35s;
+}
+
+.card::before {
+  content: "";
+
+  position: absolute;
+
+  width: 220px;
+
+  height: 220px;
+
+  right: -80px;
+
+  top: -80px;
+
+  background: #ec4899;
+
+  opacity: 0.12;
+
+  filter: blur(70px);
+
+  border-radius: 50%;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45);
+
+  border-color: #ec4899;
+}
+
+/* =========================
+ TOP
+========================= */
+
+.cardTop {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: flex-start;
+
+  gap: 1rem;
+
+  margin-bottom: 1.5rem;
+}
+
+.customerName {
+  display: flex;
+
+  align-items: center;
+
+  gap: 0.5rem;
+
+  font-size: 1.25rem;
+
+  font-weight: 900;
+}
+
+.bookingDate {
+  font-size: 0.8rem;
+
+  color: #a1a1aa;
+
+  display: block;
+
+  margin-top: 0.4rem;
+}
+
+.pending {
+  background: rgba(250, 204, 21, 0.15);
+
+  color: #facc15;
+
+  padding: 0.45rem 1rem;
+
+  border-radius: 999px;
+
+  font-size: 0.75rem;
+
+  font-weight: 800;
+}
+
+/* =========================
+ INFO BOX
+========================= */
+
+.quickInfo {
+  display: grid;
+
+  grid-template-columns: repeat(2, 1fr);
+
+  gap: 1rem;
+}
+
+.quickCard {
+  background: rgba(255, 255, 255, 0.05);
+
+  padding: 1rem;
+
+  border-radius: 20px;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.quickLabel {
+  display: flex;
+
+  gap: 0.5rem;
+
+  align-items: center;
+
+  font-size: 0.75rem;
+
+  text-transform: uppercase;
+
+  color: #a1a1aa;
+
+  margin-bottom: 0.8rem;
+}
+
+.quickCard span {
+  font-weight: 700;
+
+  font-size: 0.95rem;
+}
+
+.price {
+  color: #facc15;
+
+  font-size: 1.1rem !important;
+}
+
+/* phone */
+
+.phoneRow {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+}
+
+.copyBtn {
+  width: 36px;
+
+  height: 36px;
+
+  border: none;
+
+  border-radius: 12px;
+
+  background: rgba(236, 72, 153, 0.15);
+
+  color: #f9a8d4;
+
+  cursor: pointer;
+}
+
+/* =========================
+ MEASUREMENTS
+========================= */
+
+.measurementBox {
+  margin-top: 1rem;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 0.8rem;
+
+  padding: 1rem;
+
+  border-radius: 20px;
+
+  background: rgba(236, 72, 153, 0.12);
+
+  border: 1px solid rgba(236, 72, 153, 0.2);
+
+  color: #f9a8d4;
+
+  font-weight: 700;
+}
+
+/* =========================
+ PAYMENT
+========================= */
+
+.paymentSection {
+  margin-top: 1.3rem;
+
+  border-radius: 24px;
+
+  background: rgba(255, 255, 255, 0.05);
+
+  overflow: hidden;
+
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.paymentHeader {
+  padding: 1rem;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+}
+
+.paymentHeader h3 {
+  display: flex;
+
+  gap: 0.5rem;
+
+  align-items: center;
+
+  font-size: 0.95rem;
+}
+
+.download {
+  width: 40px;
+
+  height: 40px;
+
+  border-radius: 14px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  background: rgba(250, 204, 21, 0.15);
+
+  color: #facc15;
+}
+
+.imageWrapper {
+  padding: 0 1rem 1rem;
+
+  position: relative;
+
+  cursor: pointer;
+}
+
+.paymentImage {
+  width: 100%;
+
+  height: 180px;
+
+  object-fit: cover;
+
+  border-radius: 20px;
+}
+
+.imageOverlay {
+  position: absolute;
+
+  inset: 0;
+
+  margin: 0 1rem 1rem;
+
+  border-radius: 20px;
+
+  background: rgba(0, 0, 0, 0.55);
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  opacity: 0;
+
+  transition: 0.3s;
+
+  font-weight: 800;
+}
+
+.imageWrapper:hover .imageOverlay {
+  opacity: 1;
+}
+
+/* =========================
+ ACTIONS
+========================= */
+
+.actions {
+  display: flex;
+
+  gap: 1rem;
+
+  margin-top: 1.5rem;
+}
+
+.confirmBtn,
+.pendingBtn,
+.delete {
+  height: 50px;
+
+  border: none;
+
+  border-radius: 18px;
+
+  cursor: pointer;
+
+  font-weight: 800;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 0.5rem;
+}
+
+.confirmBtn {
+  flex: 1;
+
+  background: linear-gradient(90deg, #16a34a, #22c55e);
+
+  color: white;
+}
+
+.pendingBtn {
+  flex: 1;
+
+  background: linear-gradient(90deg, #f59e0b, #facc15);
+
+  color: black;
+}
+
+.delete {
+  width: 55px;
+
+  background: rgba(239, 68, 68, 0.15);
+
+  color: #ef4444;
+}
+
+/* =========================
+ MODAL
+========================= */
+
+.previewModal {
+  position: fixed;
+
+  inset: 0;
+
+  background: rgba(0, 0, 0, 0.9);
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 2rem;
+
+  z-index: 9999;
+}
+
+.previewContent {
+  position: relative;
+
+  max-width: 1000px;
+}
+
+.previewImage {
+  width: 100%;
+
+  max-height: 90vh;
+
+  object-fit: contain;
+
+  border-radius: 30px;
+}
+
+.closePreview {
+  position: absolute;
+
+  right: -20px;
+
+  top: -20px;
+
+  width: 45px;
+
+  height: 45px;
+
+  border-radius: 50%;
+
+  border: none;
+
+  cursor: pointer;
+}
+
+/* =========================
+ LOADING
+========================= */
+
+.loadingBox,
+.empty {
+  text-align: center;
+
+  padding: 5rem;
+}
+
+.loader {
+  width: 55px;
+
+  height: 55px;
+
+  border-radius: 50%;
+
+  border: 5px solid rgba(255, 255, 255, 0.1);
+
+  border-top-color: #ec4899;
+
+  margin: auto;
+
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* =========================
+ MOBILE
+========================= */
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .title {
+    font-size: 1.8rem;
+  }
+
+  .headerActions {
+    width: 100%;
+  }
+
+  .totalCard {
+    width: 100%;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .quickInfo {
+    grid-template-columns: 1fr;
+  }
+
+  .cardTop {
+    flex-direction: column;
+  }
+
+  .actions {
+    flex-wrap: wrap;
+  }
+
+  .delete {
+    width: 100%;
+  }
+
+  .paymentImage {
+    height: 150px;
+  }
+}
+.measurementSection {
+  margin-top: 25px;
+
+  background: #fff8fb;
+
+  border: 1px solid #fbcfe8;
+
+  border-radius: 25px;
+
+  padding: 20px;
+}
+
+.sectionTitle {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  font-size: 18px;
+
+  font-weight: 900;
+
+  color: #111827;
+
+  margin-bottom: 18px;
+}
+
+.sectionTitle svg {
+  color: #d81b60;
+}
+
+.measurementGrid {
+  display: grid;
+
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+
+  gap: 14px;
+}
+
+.measureCard {
+  background: white;
+
+  border-radius: 18px;
+
+  padding: 15px;
+
+  border: 1px solid #fce7f3;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 8px;
+}
+
+.measureCard span {
+  font-size: 12px;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.5px;
+
+  color: #9ca3af;
+
+  font-weight: 700;
+}
+
+.measureCard strong {
+  font-size: 18px;
+
+  font-weight: 900;
+
+  color: #111827;
+}
+.productsSection {
+  margin-top: 25px;
+  background: white;
+  border-radius: 24px;
+  padding: 20px;
+  border: 1px solid #fce7f3;
+}
+
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  font-weight: 800;
+  color: #111827;
+  margin-bottom: 15px;
+}
+
+.productsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 15px;
+}
+
+.productCard {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+
+  background: #fff8fb;
+
+  padding: 12px;
+
+  border-radius: 18px;
+
+  border: 1px solid #fbcfe8;
+}
+
+.productImage {
+  width: 90px;
+
+  height: 100px;
+
+  object-fit: cover;
+
+  border-radius: 15px;
+}
+
+.productCard h4 {
+  font-weight: 800;
+
+  font-size: 15px;
+
+  color: #111827;
+}
+
+.productCard p {
+  font-size: 13px;
+
+  color: #6b7280;
+
+  margin-top: 4px;
+}

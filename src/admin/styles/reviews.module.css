@@ -1,0 +1,571 @@
+/* =====================================
+   FIYORINA ADMIN REVIEWS STYLE
+   Premium Modern Dashboard UI
+===================================== */
+
+.container {
+  min-height: 100vh;
+
+  padding: 30px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 30px;
+
+  background: linear-gradient(135deg, #fff7fb, #ffffff);
+}
+
+/* ================= HEADER ================= */
+
+.header {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: 20px;
+
+  flex-wrap: wrap;
+}
+
+.header h1 {
+  font-size: clamp(28px, 4vw, 42px);
+
+  font-weight: 800;
+
+  background: linear-gradient(90deg, #ff2d6f, #f59e0b);
+
+  -webkit-background-clip: text;
+
+  color: transparent;
+}
+
+.header p {
+  margin-top: 8px;
+
+  color: #6b7280;
+
+  font-size: 15px;
+}
+
+.countCard {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 18px 25px;
+
+  border-radius: 20px;
+
+  background: white;
+
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+
+  font-weight: 700;
+
+  color: #ff2d6f;
+}
+
+.countCard svg {
+  font-size: 25px;
+}
+
+.countCard span {
+  font-size: 28px;
+}
+
+/* ================= FORM ================= */
+
+.form {
+  background: white;
+
+  padding: 30px;
+
+  border-radius: 30px;
+
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 25px;
+}
+
+.form h2 {
+  font-size: 26px;
+
+  font-weight: 800;
+
+  color: #111827;
+}
+
+.inputGrid {
+  display: grid;
+
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+
+  gap: 20px;
+}
+
+.inputBox {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  background: #fafafa;
+
+  border: 1px solid #e5e7eb;
+
+  padding: 14px 18px;
+
+  border-radius: 18px;
+
+  transition: 0.3s;
+}
+
+.inputBox:focus-within {
+  border-color: #ff2d6f;
+
+  box-shadow: 0 0 0 4px rgba(255, 45, 111, 0.1);
+}
+
+.inputBox svg {
+  color: #ff2d6f;
+}
+
+.inputBox input {
+  border: none;
+
+  outline: none;
+
+  background: none;
+
+  width: 100%;
+
+  font-size: 15px;
+}
+
+.inputBoxFull {
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 12px;
+
+  background: #fafafa;
+
+  border: 1px solid #e5e7eb;
+
+  padding: 18px;
+
+  border-radius: 18px;
+}
+
+.inputBoxFull svg {
+  margin-top: 5px;
+
+  color: #ff2d6f;
+}
+
+.inputBoxFull textarea {
+  width: 100%;
+
+  height: 120px;
+
+  border: none;
+
+  outline: none;
+
+  resize: none;
+
+  background: none;
+
+  font-size: 15px;
+}
+
+/* ================= STARS ================= */
+
+.ratingBox {
+  display: flex;
+
+  align-items: center;
+
+  gap: 20px;
+
+  flex-wrap: wrap;
+}
+
+.ratingBox p {
+  font-weight: 700;
+}
+
+.stars {
+  display: flex;
+
+  gap: 8px;
+
+  cursor: pointer;
+}
+
+.star {
+  color: #d1d5db;
+
+  font-size: 28px;
+
+  transition: 0.2s;
+}
+
+.activeStar {
+  color: #f59e0b;
+
+  font-size: 28px;
+
+  transition: 0.2s;
+}
+
+/* ================= UPLOAD ================= */
+
+.uploadArea {
+  border: 2px dashed #ff2d6f;
+
+  border-radius: 25px;
+
+  padding: 25px;
+
+  text-align: center;
+
+  background: #fff5f8;
+}
+
+.uploadArea label {
+  cursor: pointer;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  gap: 12px;
+
+  color: #ff2d6f;
+
+  font-weight: 700;
+}
+
+.uploadArea svg {
+  font-size: 40px;
+}
+
+.uploadArea input {
+  display: none;
+}
+
+.previewBox {
+  margin-top: 20px;
+
+  position: relative;
+
+  display: inline-block;
+}
+
+.previewBox img {
+  width: 180px;
+
+  height: 180px;
+
+  border-radius: 20px;
+
+  object-fit: cover;
+}
+
+.previewBox button {
+  position: absolute;
+
+  top: -10px;
+
+  right: -10px;
+
+  width: 35px;
+
+  height: 35px;
+
+  border: none;
+
+  border-radius: 50%;
+
+  background: #ef4444;
+
+  color: white;
+
+  cursor: pointer;
+}
+
+/* ================= BUTTON ================= */
+
+.submitBtn {
+  height: 55px;
+
+  border: none;
+
+  border-radius: 20px;
+
+  background: linear-gradient(90deg, #ff2d6f, #f59e0b);
+
+  color: white;
+
+  font-size: 17px;
+
+  font-weight: 800;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 12px;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.submitBtn:hover {
+  transform: translateY(-3px);
+
+  box-shadow: 0 15px 30px rgba(255, 45, 111, 0.3);
+}
+
+.submitBtn:disabled {
+  opacity: 0.6;
+
+  cursor: not-allowed;
+}
+
+/* ================= REVIEWS ================= */
+
+.reviewSection {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 20px;
+}
+
+.reviewSection h2 {
+  font-size: 28px;
+
+  font-weight: 800;
+}
+
+.grid {
+  display: grid;
+
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+
+  gap: 25px;
+}
+
+.card {
+  background: white;
+
+  border-radius: 30px;
+
+  overflow: hidden;
+
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+
+  transition: 0.3s;
+}
+
+.imageWrapper {
+  height: 260px;
+
+  position: relative;
+}
+
+.imageWrapper img {
+  width: 100%;
+
+  height: 100%;
+
+  object-fit: cover;
+}
+
+.ratingBadge {
+  position: absolute;
+
+  top: 15px;
+
+  right: 15px;
+
+  background: white;
+
+  padding: 8px 14px;
+
+  border-radius: 30px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 5px;
+
+  font-weight: 800;
+
+  color: #f59e0b;
+
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+}
+
+.info {
+  padding: 25px;
+}
+
+.info h3 {
+  font-size: 22px;
+
+  font-weight: 800;
+}
+
+.info span {
+  color: #ff2d6f;
+
+  font-size: 14px;
+
+  font-weight: 700;
+}
+
+.info p {
+  margin-top: 15px;
+
+  line-height: 1.7;
+
+  color: #6b7280;
+
+  font-size: 15px;
+}
+
+.cardBottom {
+  margin-top: 20px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 10px;
+}
+
+.smallStars {
+  display: flex;
+
+  gap: 3px;
+}
+
+.smallStars svg {
+  font-size: 15px;
+}
+
+.deleteBtn {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  border: none;
+
+  padding: 10px 16px;
+
+  border-radius: 15px;
+
+  background: #ef4444;
+
+  color: white;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.deleteBtn:hover {
+  background: #dc2626;
+
+  transform: scale(1.05);
+}
+
+/* ================= STATES ================= */
+
+.loading,
+.empty {
+  height: 200px;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  gap: 15px;
+
+  font-size: 20px;
+
+  font-weight: 700;
+
+  color: #6b7280;
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 768px) {
+  .container {
+    padding: 18px;
+  }
+
+  .form {
+    padding: 20px;
+
+    border-radius: 22px;
+  }
+
+  .cardBottom {
+    flex-direction: column;
+
+    align-items: flex-start;
+  }
+
+  .imageWrapper {
+    height: 220px;
+  }
+
+  .header {
+    align-items: flex-start;
+  }
+}
